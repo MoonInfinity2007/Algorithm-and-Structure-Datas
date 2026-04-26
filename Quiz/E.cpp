@@ -2,13 +2,15 @@
 #include <vector>
 #include <string>
 
+#define LL long long
+
 int main() {
     std::string s;
-    std::vector<int> v = {};
+    std::vector<LL> v = {};
     int l = 0, r = 0;
     while (s != "exit") {
         if (s == "push") {
-            int x;
+            LL x;
             std::cin >> x;
             ++r;
             if (r > v.size()) v.push_back(x);
@@ -20,13 +22,14 @@ int main() {
                 std::cout << v[l] << "\n";
                 ++l;
             }
-        } else if (s == "back") {
-            if (l == 0) std::cout << "error\n";
-            else std::cout << v[l - 1] << "\n";
-        } else if (s == "size") std::cout << l - r << "\n";
+        } else if (s == "front") {
+            if (r - l <= 0) std::cout << "error\n";
+            else std::cout << v[l] << "\n";
+        } else if (s == "size") std::cout << r - l << "\n";
         else if (s == "clear") {
             v.clear();
             l = 0;
+            r = 0;
             std::cout << "ok\n";
         }
         std::cin >> s;
