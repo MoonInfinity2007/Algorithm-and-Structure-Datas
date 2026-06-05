@@ -11,7 +11,7 @@ class Tree {
             delete left;
             delete right;
         }
-    }; *root = nullptr;
+    } *root = nullptr;
     
     bool find(Node*& node, const T& value) const {
         if (node == nullptr) return false;
