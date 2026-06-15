@@ -25,6 +25,8 @@ class Tree {
         return get(2 * v + 1, 0, sz, q_left, q_right) + get(2 * v + 2, 0, sz, q_left, q_right);
     }
 
+    void push() {}
+
 public:
     explicit Tree(const std::vector<int64_t>& arr) : arr(arr) {
         while (sz < arr.size()) sz <<= 1;
