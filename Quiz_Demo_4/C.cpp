@@ -1,41 +1,51 @@
+
 #include <iostream>
-#include <cstdint>
-#include <string>
 #include <vector>
-#include <algorithm>
+#include <string>
 
-typedef std::vector<int64_t> vi;
-typedef std::string str;
+std::vector<int> buildGoodSuffix(const std::string& p) {
+    int m = p.size();
 
-vi z_func(str& t, str& p) {
-    str s = p + '$' + t;
-    int64_t n = s.size();
-    vi z(n, 0);
-    int64_t l = 0, r = -1;
-    for (int64_t i = 1; i < n; i++) {
-        if (i < r) z[i] = std::min(r - i + 1, z[i - l]);
-        while (i + z[i] < n && s[z[i]] == s[i + z[i]]) z[i]++;
-        if (i + z[i] > r) {
-            r = i + z[i] - 1;
-            l = i;
+    std::vector<int> shift(m + 1, 0);
+    std::vector<int> border(m + 1, 0);
+
+    int i = m;
+    int j = m + 1;
+
+    border[i] = j;
+
+    // Сильное правило хорошего суффикса
+    while (i > 0) {
+        while (j <= m && p[i - 1] != p[j - 1]) {
+            if (shift[j] == 0) {
+                shift[j] = j - i;
+            }
+            j = border[j];
+        }
+
+        --i;
+        --j;
+        border[i] = j;
+    }
+
+    // Обработка перекрытий с префиксом
+    j = border[0];
+
+    for (int i = 0; i <= m; ++i) {
+        if (shift[i] == 0) {
+            shift[i] = j;
+        }
+
+        if (i == j) {
+            j = border[j];
         }
     }
-    return z;
+
+    return shift;
 }
 
+
 int main() {
-    str t, p;
-    std::cin >> p >> t;
-    vi zl = z_func(t, p);
-    std::reverse(t.begin(), t.end());
-    std::reverse(p.begin(), p.end());
-    vi zr = z_func(t, p);
-    int64_t k = p.size() - 1;
-    std::reverse(zr.begin() + k + 2, zr.end());
-    vi ans = {};
-    for (int64_t i = p.size() + 1; i < zl.size() - k; i++) {
-        if (zl[i] + zr[k + i] >= k) ans.push_back(i - k - 1);
-    }
-    std::cout << ans.size() << "\n";
-    for (auto elem : ans) std::cout << elem << " ";
+    std::string s = "abacaba";
+    auto p = buildGoodSuffix(s);
 }
