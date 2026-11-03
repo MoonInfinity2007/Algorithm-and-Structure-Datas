@@ -22,24 +22,28 @@ vi z_function(str& s) {
     return z;
 }
 
-int32_t get_period(str& s) {
+int32_t get_period(str& s, int32_t& repeats) {
     int32_t n = s.size();
     vi z = z_function(s);
     for (int32_t i = 1; 2 * i <= n; ++i) {
-        if (z[i] >= (n / i - 1) * i) return i;
+        if (z[i] >= i) {
+            repeats = 1 + z[i] / i;
+            return i;
+        }
     }
     return n;
 }
 
 void print_word(str& s) {
     int32_t n = s.size();
-    int32_t p = get_period(s);
+    int32_t repeats = 1;
+    int32_t p = get_period(s, repeats);
     if (p == n) {
         std::cout << s;
         return;
     }
-    std::cout << n / p << "*(" << s.substr(0, p) << ')';
-    if (n % p > 0) std::cout << '+' << s.substr(n - n % p);
+    std::cout << repeats << "*(" << s.substr(0, p) << ')';
+    if (repeats * p < n) std::cout << '+' << s.substr(repeats * p);
 }
 
 int main() {
