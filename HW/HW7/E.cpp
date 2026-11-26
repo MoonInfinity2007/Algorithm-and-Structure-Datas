@@ -1,32 +1,30 @@
 #include <iostream>
 #include <cstdint>
-#include <vector>
-
-int64_t dp[100][100];
-
-bool check(int64_t x, int64_t y, int64_t n, int64_t m) {
-    for (int64_t i = x + 1; i < n; i++) {
-        if (dp[i][y] == 0) return true; 
-    }
-    for (int64_t i = y + 1; i < m; i++) {
-        if (dp[x][i] == 0) return true; 
-    }
-    for (int64_t i = 1; x + i < n && y + i < m; i++) {
-        if (dp[x + i][i + y] == 0) return true; 
-    }
-    return false;
-}
 
 int main() {
-    int64_t n, m;
-    std::cin >> n >> m;
-    dp[n - 1][m - 1] = 0;
-    for (int64_t i = n - 1; i > -1; i--) {
-        for (int64_t j = m - 1; j > -1; j--) {
-            if (i == n - 1 && j == m - 1) continue;
-            if (check(i, j, n, m)) dp[i][j] = 1;
-            else dp[i][j] = 0;
+    int64_t n;
+    std::cin >> n;
+    int64_t a[n];
+    for (int64_t i  = 0; i < n; i++) std::cin >> a[i];
+    int64_t dp[n + 2];
+    dp[0] = -1e9;
+    for (int64_t i = 1; i < n + 2; i++) dp[i] = 1e9;
+    auto bs = [&](int64_t x) -> int64_t{
+        int64_t l = 0, r = n + 1;
+        while (r - l > 1) {
+            int64_t mid = (l + r) / 2;
+            if (dp[mid] >= x) r = mid;
+            else l = mid;
+        }
+        return r;
+    };
+    int64_t ans = 0;
+    for (int64_t i = 0; i < n; i++) {
+        int64_t j = bs(a[i]);
+        if (dp[j - 1] < a[i] && a[i] < dp[j]) {
+            dp[j] = a[i];
+            ans = std::max(ans, j);
         }
     }
-    std::cout << (dp[0][0] ? 1 : 2);
+    std::cout << n - ans;
 }
